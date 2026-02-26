@@ -44,6 +44,15 @@ moderation:
   unban_error: 'Failed to unban user\.'
   unban_self: 'You cannot unban yourself\.'
   unban_not_banned: 'This user is not banned\.'
+  mute_success: 'User `{username}` has been muted\.'
+  mute_duration: 'Duration\: {duration}'
+  mute_error: 'Failed to mute user\.'
+  mute_self: 'You cannot mute yourself\.'
+  mute_admin: 'You cannot mute an admin\.'
+  unmute_success: 'User `{username}` has been unmuted\.'
+  unmute_error: 'Failed to unmute user\.'
+  unmute_self: 'You cannot unmute yourself\.'
+  unmute_not_muted: 'This user is not muted\.'
   bot_no_permission: 'I need to be an admin with permission to restrict members\.'
   no_target: 'Please reply to a message, mention a user, or provide a user ID\.'
   restriction_reason: 'Reason\: {reason}'
@@ -53,3 +62,5 @@ moderation:
     /kick \<user\> \[reason\] \- Kick a user from the group
     /ban \<user\> \[duration\] \[reason\] \- Ban a user from the group
     /unban \<user\> \[reason\] \- Unban a user from the group
+    /mute \<user\> \[duration\] \[reason\] \- Mute a user in the group
+    /unmute \<user\> \[reason\] \- Unmute a user in the group

@@ -44,6 +44,15 @@ moderation:
   unban_error: 'Falha ao desbanir o usuário\.'
   unban_self: 'Você não pode se desbanir\.'
   unban_not_banned: 'Este usuário não está banido\.'
+  mute_success: 'Usuário `{username}` foi silenciado\.'
+  mute_duration: 'Duração\: {duration}'
+  mute_error: 'Falha ao silenciar o usuário\.'
+  mute_self: 'Você não pode se silenciar\.'
+  mute_admin: 'Você não pode silenciar um admin\.'
+  unmute_success: 'Usuário `{username}` foi dessilenciado\.'
+  unmute_error: 'Falha ao dessilenciar o usuário\.'
+  unmute_self: 'Você não pode se dessilenciar\.'
+  unmute_not_muted: 'Este usuário não está silenciado\.'
   bot_no_permission: 'Preciso ser admin com permissão para restringir membros\.'
   no_target: 'Responda a uma mensagem, mencione um usuário ou forneça um ID\.'
   restriction_reason: 'Motivo\: {reason}'
@@ -53,3 +62,5 @@ moderation:
     /kick \<usuário\> \[motivo\] \- Remove um usuário do grupo
     /ban \<usuário\> \[duração\] \[motivo\] \- Bane um usuário do grupo
     /unban \<usuário\> \[motivo\] \- Desbane um usuário do grupo
+    /mute \<usuário\> \[duração\] \[motivo\] \- Silencia um usuário no grupo
+    /unmute \<usuário\> \[motivo\] \- Dessilencia um usuário no grupo

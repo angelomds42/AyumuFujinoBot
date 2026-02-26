@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from telegram import Update, ChatMember, MessageEntity, constants
+from telegram import ChatPermissions, Update, ChatMember, MessageEntity, constants
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.error import TelegramError
 from bot.utils.admin import is_user_admin, bot_has_permission
@@ -217,8 +217,102 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
+async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    s, e = get_string_helper(update)
+
+    user_id, display_name, ok = await _check_common(update, context, s, "mute")
+    if not ok:
+        return
+
+    arg_offset = 0 if update.message.reply_to_message else 1
+    until_date = None
+    duration_str = None
+
+    if context.args and len(context.args) > arg_offset:
+        delta = _parse_duration(context.args[arg_offset])
+        if delta:
+            until_date = datetime.now(tz=timezone.utc) + delta
+            duration_str = context.args[arg_offset]
+            arg_offset += 1
+
+    reason = " ".join(context.args[arg_offset:]) if context.args else None
+
+    try:
+        await update.effective_chat.restrict_member(
+            user_id,
+            ChatPermissions(
+                can_send_messages=False,
+                can_send_polls=False,
+                can_send_other_messages=False,
+                can_add_web_page_previews=False,
+            ),
+            until_date=until_date,
+        )
+
+        text = s("moderation.mute_success", username=e(display_name))
+        if duration_str:
+            text += f"\n{s('moderation.mute_duration', duration=e(duration_str))}"
+        if reason:
+            text += f"\n{s('moderation.restriction_reason', reason=e(reason))}"
+
+        await update.message.reply_text(
+            text, parse_mode=constants.ParseMode.MARKDOWN_V2
+        )
+    except TelegramError:
+        await update.message.reply_text(
+            s("moderation.mute_error"), parse_mode=constants.ParseMode.MARKDOWN_V2
+        )
+
+
+async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    s, e = get_string_helper(update)
+
+    user_id, display_name, ok = await _check_common(
+        update, context, s, "unmute", check_admin_target=False
+    )
+    if not ok:
+        return
+
+    member = await _get_member(update.effective_chat, user_id)
+    if await _guard(
+        update,
+        s,
+        not member or member.can_send_messages is not False,
+        "moderation.unmute_not_muted",
+    ):
+        return
+
+    reason_start = 1 if context.args and not update.message.reply_to_message else 0
+    reason = " ".join(context.args[reason_start:]) if context.args else None
+
+    try:
+        await update.effective_chat.restrict_member(
+            user_id,
+            ChatPermissions(
+                can_send_messages=True,
+                can_send_polls=True,
+                can_send_other_messages=True,
+                can_add_web_page_previews=True,
+            ),
+        )
+
+        text = s("moderation.unmute_success", username=e(display_name))
+        if reason:
+            text += f"\n{s('moderation.restriction_reason', reason=e(reason))}"
+
+        await update.message.reply_text(
+            text, parse_mode=constants.ParseMode.MARKDOWN_V2
+        )
+    except TelegramError:
+        await update.message.reply_text(
+            s("moderation.unmute_error"), parse_mode=constants.ParseMode.MARKDOWN_V2
+        )
+
+
 def __init_module__(application):
     application.add_handler(CommandHandler("kick", kick))
     application.add_handler(CommandHandler("ban", ban))
     application.add_handler(CommandHandler("unban", unban))
+    application.add_handler(CommandHandler("mute", mute))
+    application.add_handler(CommandHandler("unmute", unmute))
     register_module_help("Moderation", "moderation.help")
