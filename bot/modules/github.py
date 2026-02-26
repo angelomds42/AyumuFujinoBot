@@ -5,33 +5,20 @@ from bot.utils.language import get_msg_string
 from github import Github
 from github.GithubException import UnknownObjectException, GithubException
 import asyncio
-import os
 
 
 async def github(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # strings
-    no_args_string = get_msg_string(update, "github.no_args")
-    user_info_string = get_msg_string(update, "github.user_info")
-    name_string = get_msg_string(update, "github.name")
-    username_string = get_msg_string(update, "github.username")
-    location_string = get_msg_string(update, "github.location")
-    followers_string = get_msg_string(update, "github.followers")
-    repos_string = get_msg_string(update, "github.public_repos")
-
-    args = context.args
-    if not args:
-        await update.message.reply_text(no_args_string, parse_mode="Markdown")
+    if not context.args:
+        await update.message.reply_text(
+            get_msg_string(update, "github.no_args"), parse_mode="Markdown"
+        )
         return
 
-    username = args[0]
-
     try:
-        gh = Github()
-        user = await asyncio.to_thread(gh.get_user, username)
+        user = await asyncio.to_thread(Github().get_user, context.args[0])
     except UnknownObjectException:
         await update.message.reply_text(
-            get_msg_string(update, "github.not_found", username=username),
-            parse_mode="Markdown",
+            get_msg_string(update, "github.not_found"), parse_mode="Markdown"
         )
         return
     except GithubException:
@@ -40,23 +27,18 @@ async def github(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    login = getattr(user, "login", "") or ""
-    name = getattr(user, "name", "") or ""
-    bio = getattr(user, "bio", "") or ""
-    location = getattr(user, "location", "") or ""
-    profile_url = getattr(user, "html_url", "") or ""
-    followers = getattr(user, "followers", "") or ""
-    public_repos = getattr(user, "public_repos", "") or ""
+    def s(key):
+        return get_msg_string(update, key)
 
     await update.message.reply_text(
-        f"*{user_info_string}*:\n"
-        f"*{name_string}*: {name}\n"
-        f"*{username_string}*: {login}\n"
-        f"*Bio*: {bio}\n"
-        f"*{location_string}*: {location}\n"
-        f"*{repos_string}*: {public_repos}\n"
-        f"*{followers_string}*: {followers}\n"
-        f"*URL:* {profile_url}",
+        f"*{s('github.user_info')}*:\n"
+        f"*{s('github.name')}*: {user.name or ''}\n"
+        f"*{s('github.username')}*: {user.login or ''}\n"
+        f"*Bio*: {user.bio or ''}\n"
+        f"*{s('github.location')}*: {user.location or ''}\n"
+        f"*{s('github.public_repos')}*: {user.public_repos or ''}\n"
+        f"*{s('github.followers')}*: {user.followers or ''}\n"
+        f"*URL:* {user.html_url or ''}",
         parse_mode="Markdown",
     )
 
