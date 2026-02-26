@@ -1,34 +1,25 @@
 from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler
-from bot.utils.help import register_module_help
-from bot.utils.language import get_msg_string
+from bot.utils.help import get_string_helper, register_module_help
 from github import Github
 from github.GithubException import UnknownObjectException, GithubException
 import asyncio
 
 
 async def github(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    s = get_string_helper(update)
     if not context.args:
-        await update.message.reply_text(
-            get_msg_string(update, "github.no_args"), parse_mode="Markdown"
-        )
+        await update.message.reply_text(s("github.no_args"), parse_mode="Markdown")
         return
 
     try:
         user = await asyncio.to_thread(Github().get_user, context.args[0])
     except UnknownObjectException:
-        await update.message.reply_text(
-            get_msg_string(update, "github.not_found"), parse_mode="Markdown"
-        )
+        await update.message.reply_text(s("github.not_found"), parse_mode="Markdown")
         return
     except GithubException:
-        await update.message.reply_text(
-            get_msg_string(update, "github.error"), parse_mode="Markdown"
-        )
+        await update.message.reply_text(s("github.error"), parse_mode="Markdown")
         return
-
-    def s(key):
-        return get_msg_string(update, key)
 
     await update.message.reply_text(
         f"*{s('github.user_info')}*:\n"
