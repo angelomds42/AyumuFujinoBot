@@ -1,4 +1,4 @@
-from telegram import InlineKeyboardButton
+from telegram import InlineKeyboardButton, helpers
 from typing import Dict, List
 from bot.utils.language import get_msg_string
 
@@ -27,9 +27,12 @@ def get_module_help(module_name: str):
 
 
 def get_string_helper(update):
-    """Returns a shorthand string getter bound to the update's language."""
+    """Returns (s, e) — localized string getter and MarkdownV2 escaper."""
 
     def s(key, **kwargs):
         return get_msg_string(update, key, **kwargs)
 
-    return s
+    def e(value):
+        return helpers.escape_markdown(str(value), version=2)
+
+    return s, e
