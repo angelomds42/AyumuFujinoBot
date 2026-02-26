@@ -38,6 +38,7 @@ moderation:
   kick_error: 'Failed to kick user\.'
   kick_self: 'You cannot kick yourself\.'
   kick_admin: 'You cannot kick an admin\.'
+  kick_bot_no_permission: 'I need to be an admin with permission to restrict members\.'
   ban_success: 'User `{username}` has been banned\.'
   ban_duration: 'Duration\: {duration}'
   ban_reason: 'Reason\: {reason}'
@@ -46,6 +47,7 @@ moderation:
   ban_error: 'Failed to ban user\.'
   ban_self: 'You cannot ban yourself\.'
   ban_admin: 'You cannot ban an admin\.'
+  ban_no_permission: 'I need to be an admin with permission to restrict members\.'
   help: |
     Moderation Module\:
     /kick \<user\> \[reason\] \- Kick a user from the group

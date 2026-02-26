@@ -38,6 +38,7 @@ moderation:
   kick_error: 'Falha ao remover o usuário\.'
   kick_self: 'Você não pode se remover\.'
   kick_admin: 'Você não pode remover um admin\.'
+  kick_bot_no_permission: 'Preciso ser admin com permissão para restringir membros\.'
   ban_success: 'Usuário `{username}` foi banido\.'
   ban_duration: 'Duração\: {duration}'
   ban_reason: 'Motivo\: {reason}'
@@ -46,6 +47,7 @@ moderation:
   ban_error: 'Falha ao banir o usuário\.'
   ban_self: 'Você não pode se banir\.'
   ban_admin: 'Você não pode banir um admin\.'
+  ban_bot_no_permission: 'Preciso ser admin com permissão para restringir membros\.'
   help: |
     Módulo de Moderação\:
     /kick \<usuário\> \[motivo\] \- Remove um usuário do grupo

@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from telegram import Update, ChatMember, MessageEntity, constants
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.error import TelegramError
+from bot.utils.admin import is_user_admin, bot_has_permission
 from bot.utils.help import get_string_helper, register_module_help
 from bot.modules.users import get_user_id
 
@@ -18,11 +19,6 @@ def _parse_duration(arg: str) -> timedelta | None:
         return units[unit](number) if unit in units else None
     except (ValueError, IndexError):
         return None
-
-
-async def _is_admin(update: Update) -> bool:
-    member = await update.effective_chat.get_member(update.effective_user.id)
-    return member.status in (ChatMember.ADMINISTRATOR, ChatMember.OWNER)
 
 
 async def _resolve_target(update: Update, context):
@@ -85,7 +81,15 @@ async def _guard(update, s, condition, key) -> bool:
 
 async def _check_common(update, context, s, action):
     if await _guard(
-        update, s, not await _is_admin(update), f"moderation.{action}_not_admin"
+        update, s, not await is_user_admin(update), f"moderation.{action}_not_admin"
+    ):
+        return None, None, False
+
+    if await _guard(
+        update,
+        s,
+        not await bot_has_permission(update, "can_restrict_members"),
+        f"moderation.{action}_bot_no_permission",
     ):
         return None, None, False
 
