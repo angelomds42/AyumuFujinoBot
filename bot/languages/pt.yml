@@ -1,25 +1,24 @@
 # Strings em Português
 common:
-  start: 'Bem\-vindo ao NoNameBot\! Um bot modular para Telegram\.'
-  help: 'Selecione um módulo abaixo para ver suas informações de ajuda\:'
+  start: 'Olá\! Sou um bot modular para Telegram\.'
+  help: 'Selecione um módulo abaixo para ver seus comandos\:'
   back: "« Voltar"
   btn_help: "Ajuda"
 
 basics:
   help: |
-    Módulo Básico\:
+    Básico\:
     /start \- Inicia o bot
     /help \- Mostra este menu
-    /info \- Mostra suas informações
 
 github:
   help: |
-    Módulo GitHub\:
-    Use `/github \<usuário\>` para obter informações sobre um usuário do GitHub\.
-  no_args: 'Por favor, forneça um nome de usuário do GitHub\. Exemplo\: `/github torvalds`'
-  not_found: 'Usuário do GitHub não encontrado\.'
-  error: 'Ocorreu um erro ao buscar dados do usuário no GitHub\.'
-  user_info: "Informações do Usuário"
+    GitHub\:
+    /github \<usuário\> \- Obtém informações sobre um usuário do GitHub
+  no_args: 'Forneça um nome de usuário do GitHub\. Exemplo\: `/github torvalds`'
+  not_found: 'Usuário não encontrado\.'
+  error: 'Falha ao buscar dados do usuário\.'
+  user_info: "Informações"
   name: "Nome"
   username: "Usuário"
   location: "Localização"
@@ -27,40 +26,40 @@ github:
   followers: "Seguidores"
 
 errors:
-  unknown: 'Ocorreu um erro desconhecido\.'
+  unknown: 'Algo deu errado\.'
   not_found: 'Não encontrado\.'
 
 moderation:
-  kick_success: 'Usuário `{username}` foi removido\.'
-  kick_error: 'Falha ao remover o usuário\.'
-  kick_self: 'Você não pode se remover\.'
-  kick_admin: 'Você não pode remover um admin\.'
-  ban_success: 'Usuário `{username}` foi banido\.'
+  kick_success: '`{username}` foi removido do grupo\.'
+  kick_error: 'Falha ao remover\. Verifique se tenho as permissões necessárias\.'
+  kick_self: 'Não é possível remover você mesmo do grupo\.'
+  kick_admin: 'Não é possível remover um admin\.'
+  ban_success: '`{username}` foi banido\.'
   ban_duration: 'Duração\: {duration}'
-  ban_error: 'Falha ao banir o usuário\.'
-  ban_self: 'Você não pode se banir\.'
-  ban_admin: 'Você não pode banir um admin\.'
-  unban_success: 'Usuário `{username}` foi desbanido\.'
-  unban_error: 'Falha ao desbanir o usuário\.'
-  unban_self: 'Você não pode se desbanir\.'
+  ban_error: 'Falha ao banir\. Verifique se tenho as permissões necessárias\.'
+  ban_self: 'Não é possível banir você mesmo\.'
+  ban_admin: 'Não é possível banir um admin\.'
+  unban_success: '`{username}` foi desbanido\.'
+  unban_error: 'Falha ao desbanir\. Verifique se tenho as permissões necessárias\.'
+  unban_self: 'Não é possível desbanir você mesmo\.'
   unban_not_banned: 'Este usuário não está banido\.'
-  mute_success: 'Usuário `{username}` foi silenciado\.'
+  mute_success: '`{username}` foi silenciado\.'
   mute_duration: 'Duração\: {duration}'
-  mute_error: 'Falha ao silenciar o usuário\.'
-  mute_self: 'Você não pode se silenciar\.'
-  mute_admin: 'Você não pode silenciar um admin\.'
-  unmute_success: 'Usuário `{username}` foi dessilenciado\.'
-  unmute_error: 'Falha ao dessilenciar o usuário\.'
-  unmute_self: 'Você não pode se dessilenciar\.'
+  mute_error: 'Falha ao silenciar\. Verifique se tenho as permissões necessárias\.'
+  mute_self: 'Não é possível silenciar você mesmo\.'
+  mute_admin: 'Não é possível silenciar um admin\.'
+  unmute_success: '`{username}` pode falar novamente\.'
+  unmute_error: 'Falha ao remover o silêncio\. Verifique se tenho as permissões necessárias\.'
+  unmute_self: 'Não é possível remover seu próprio silêncio\.'
   unmute_not_muted: 'Este usuário não está silenciado\.'
-  bot_no_permission: 'Preciso ser admin com permissão para restringir membros\.'
+  bot_no_permission: 'Preciso da permissão de restringir membros para fazer isso\.'
   no_target: 'Responda a uma mensagem, mencione um usuário ou forneça um ID\.'
   restriction_reason: 'Motivo\: {reason}'
-  user_not_admin: 'Você não tem permissão para usar este comando\.'
+  user_not_admin: 'Você precisa ser admin para usar este comando\.'
   help: |
     Módulo de Moderação\:
     /kick \<usuário\> \[motivo\] \- Remove um usuário do grupo
-    /ban \<usuário\> \[duração\] \[motivo\] \- Bane um usuário do grupo
-    /unban \<usuário\> \[motivo\] \- Desbane um usuário do grupo
-    /mute \<usuário\> \[duração\] \[motivo\] \- Silencia um usuário no grupo
-    /unmute \<usuário\> \[motivo\] \- Dessilencia um usuário no grupo
+    /ban \<usuário\> \[duração\] \[motivo\] \- Bane um usuário \(duração: 1m, 2h, 3d\)
+    /unban \<usuário\> \[motivo\] \- Desbane um usuário
+    /mute \<usuário\> \[duração\] \[motivo\] \- Silencia um usuário
+    /unmute \<usuário\> \- Remove o silêncio de um usuário

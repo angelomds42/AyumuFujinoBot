@@ -1,25 +1,24 @@
 # English strings
 common:
-  start: 'Welcome to NoNameBot\! A modular Telegram bot\.'
-  help: 'Select a module below to see its help information\:'
+  start: 'Hey\! I am a modular Telegram bot\.'
+  help: 'Select a module below to see its commands\:'
   back: "« Back"
   btn_help: "Help"
 
 basics:
   help: |
-    Basics Module\:
+    Basics\:
     /start \- Start the bot
     /help \- Show this menu
-    /info \- Show your info
 
 github:
   help: |
-    GitHub Module\:
-    Use `/github \<username\>` to get information about a GitHub user\.
-  no_args: 'Please provide a GitHub username\. Example\: `/github torvalds`'
-  not_found: 'GitHub user not found\.'
-  error: 'An error occurred while fetching GitHub user data\.'
-  user_info: "User Information"
+    GitHub\:
+    /github \<username\> \- Get info about a GitHub user
+  no_args: 'Provide a GitHub username\. Example\: `/github torvalds`'
+  not_found: 'User not found\.'
+  error: 'Failed to fetch user data\.'
+  user_info: "User Info"
   name: "Name"
   username: "Username"
   location: "Location"
@@ -27,40 +26,40 @@ github:
   followers: "Followers"
 
 errors:
-  unknown: 'An unknown error occurred\.'
+  unknown: 'Something went wrong\.'
   not_found: 'Not found\.'
 
 moderation:
-  kick_success: 'User `{username}` has been kicked\.'
-  kick_error: 'Failed to kick user\.'
+  kick_success: 'Kicked `{username}` from the group\.'
+  kick_error: 'Failed to kick\. Make sure I have the right permissions\.'
   kick_self: 'You cannot kick yourself\.'
-  kick_admin: 'You cannot kick an admin\.'
-  ban_success: 'User `{username}` has been banned\.'
+  kick_admin: 'Cannot kick an admin\.'
+  ban_success: '`{username}` has been banned\.'
   ban_duration: 'Duration\: {duration}'
-  ban_error: 'Failed to ban user\.'
+  ban_error: 'Failed to ban\. Make sure I have the right permissions\.'
   ban_self: 'You cannot ban yourself\.'
-  ban_admin: 'You cannot ban an admin\.'
-  unban_success: 'User `{username}` has been unbanned\.'
-  unban_error: 'Failed to unban user\.'
+  ban_admin: 'Cannot ban an admin\.'
+  unban_success: '`{username}` has been unbanned\.'
+  unban_error: 'Failed to unban\. Make sure I have the right permissions\.'
   unban_self: 'You cannot unban yourself\.'
   unban_not_banned: 'This user is not banned\.'
-  mute_success: 'User `{username}` has been muted\.'
+  mute_success: '`{username}` has been muted\.'
   mute_duration: 'Duration\: {duration}'
-  mute_error: 'Failed to mute user\.'
+  mute_error: 'Failed to mute\. Make sure I have the right permissions\.'
   mute_self: 'You cannot mute yourself\.'
-  mute_admin: 'You cannot mute an admin\.'
-  unmute_success: 'User `{username}` has been unmuted\.'
-  unmute_error: 'Failed to unmute user\.'
+  mute_admin: 'Cannot mute an admin\.'
+  unmute_success: '`{username}` has been unmuted\.'
+  unmute_error: 'Failed to unmute\. Make sure I have the right permissions\.'
   unmute_self: 'You cannot unmute yourself\.'
   unmute_not_muted: 'This user is not muted\.'
-  bot_no_permission: 'I need to be an admin with permission to restrict members\.'
-  no_target: 'Please reply to a message, mention a user, or provide a user ID\.'
+  bot_no_permission: 'I need restrict members permission to do that\.'
+  no_target: 'Reply to a message, mention a user, or provide a user ID\.'
   restriction_reason: 'Reason\: {reason}'
-  user_not_admin: 'You do not have permission to use this command\.'
+  user_not_admin: 'You need to be an admin to use this command\.'
   help: |
     Moderation Module\:
     /kick \<user\> \[reason\] \- Kick a user from the group
-    /ban \<user\> \[duration\] \[reason\] \- Ban a user from the group
-    /unban \<user\> \[reason\] \- Unban a user from the group
-    /mute \<user\> \[duration\] \[reason\] \- Mute a user in the group
-    /unmute \<user\> \[reason\] \- Unmute a user in the group
+    /ban \<user\> \[duration\] \[reason\] \- Ban a user \(duration: 1m, 2h, 3d\)
+    /unban \<user\> \[reason\] \- Unban a user
+    /mute \<user\> \[duration\] \[reason\] \- Mute a user
+    /unmute \<user\> \- Unmute a user
