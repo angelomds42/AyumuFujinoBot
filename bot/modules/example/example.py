@@ -5,10 +5,9 @@ from bot.utils.help import get_string_helper, register_module_help
 
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Greets the user with a localized message."""
-    s = get_string_helper(update)
+    s, _ = get_string_helper(update)
     await update.message.reply_text(
-        helpers.escape_markdown(s("common.start"), version=2),
-        parse_mode=constants.ParseMode.MARKDOWN_V2,
+        s("common.start"), parse_mode=constants.ParseMode.MARKDOWN_V2
     )
 
 
@@ -18,7 +17,7 @@ async def user_info_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if not user:
         return
 
-    e = lambda t: helpers.escape_markdown(str(t), version=2)
+    s, e = get_string_helper(update)
 
     response = (
         f"*User Profile*\n"
@@ -38,6 +37,7 @@ async def user_info_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 async def echo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echoes input back to the user. Escapes it to prevent parsing errors."""
+    _, e = get_string_helper(update)
     args = update.message.text.split(None, 1)
 
     if len(args) < 2:
@@ -47,13 +47,14 @@ async def echo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     await update.message.reply_text(
-        helpers.escape_markdown(args[1], version=2),
-        parse_mode=constants.ParseMode.MARKDOWN_V2,
+        e(args[1]), parse_mode=constants.ParseMode.MARKDOWN_V2
     )
 
 
 async def args_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Example of how to handle command arguments. Usage: /args foo bar baz"""
+    _, e = get_string_helper(update)
+
     if not context.args:
         await update.message.reply_text(
             "*Usage:* `/args [arg1] [arg2] \\.\\.\\.`",
@@ -61,9 +62,7 @@ async def args_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         )
         return
 
-    e = lambda t: helpers.escape_markdown(str(t), version=2)
     args_list = "\n".join(f"• `{e(arg)}`" for arg in context.args)
-
     await update.message.reply_text(
         f"*You sent {e(len(context.args))} argument\(s\):*\n{args_list}",
         parse_mode=constants.ParseMode.MARKDOWN_V2,
@@ -72,10 +71,9 @@ async def args_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 async def localized_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Example of how to use get_string_helper for localized responses."""
-    s = get_string_helper(update)
+    s, _ = get_string_helper(update)
     await update.message.reply_text(
-        helpers.escape_markdown(s("common.help"), version=2),
-        parse_mode=constants.ParseMode.MARKDOWN_V2,
+        s("common.help"), parse_mode=constants.ParseMode.MARKDOWN_V2
     )
 
 
@@ -85,7 +83,7 @@ async def chat_info_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     if not chat:
         return
 
-    e = lambda t: helpers.escape_markdown(str(t), version=2)
+    s, e = get_string_helper(update)
 
     await update.message.reply_text(
         f"*Chat Info*\n"
@@ -107,4 +105,4 @@ async def chat_info_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 #     application.add_handler(CommandHandler("args", args_handler))
 #     application.add_handler(CommandHandler("localized", localized_handler))
 #     application.add_handler(CommandHandler("chat", chat_info_handler))
-#     register_module_help("Example", "example.help")  # optional
+#     register_module_help("Example", "example.help")

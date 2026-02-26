@@ -9,8 +9,7 @@ from bot.utils.help import (
 
 
 async def send_menu(update: Update, text_key: str, keyboard: list):
-    """Helper to send or edit messages with keyboards."""
-    s = get_string_helper(update)
+    s, _ = get_string_helper(update)
     text = s(text_key)
     markup = InlineKeyboardMarkup(keyboard)
 
@@ -25,7 +24,7 @@ async def send_menu(update: Update, text_key: str, keyboard: list):
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    s = get_string_helper(update)
+    s, _ = get_string_helper(update)
     keyboard = [[InlineKeyboardButton(s("common.btn_help"), callback_data="help_main")]]
     await send_menu(update, "common.start", keyboard)
 
@@ -34,7 +33,7 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     data = query.data
-    s = get_string_helper(update)
+    s, _ = get_string_helper(update)
 
     if data == "start_main":
         await start(update, context)
