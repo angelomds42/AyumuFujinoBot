@@ -79,9 +79,9 @@ async def _guard(update, s, condition, key) -> bool:
     return False
 
 
-async def _check_common(update, context, s, action):
+async def _check_common(update, context, s, action, check_admin_target=True):
     if await _guard(
-        update, s, not await is_user_admin(update), f"moderation.user_not_admin"
+        update, s, not await is_user_admin(update), "moderation.user_not_admin"
     ):
         return None, None, False
 
@@ -89,27 +89,28 @@ async def _check_common(update, context, s, action):
         update,
         s,
         not await bot_has_permission(update, "can_restrict_members"),
-        f"moderation.bot_no_permission",
+        "moderation.bot_no_permission",
     ):
         return None, None, False
 
     user_id, display_name = await _resolve_target(update, context)
 
-    if await _guard(update, s, not user_id, f"moderation.no_target"):
+    if await _guard(update, s, not user_id, "moderation.no_target"):
         return None, None, False
     if await _guard(
         update, s, user_id == update.effective_user.id, f"moderation.{action}_self"
     ):
         return None, None, False
 
-    member = await _get_member(update.effective_chat, user_id)
-    if member and await _guard(
-        update,
-        s,
-        member.status in (ChatMember.ADMINISTRATOR, ChatMember.OWNER),
-        f"moderation.{action}_admin",
-    ):
-        return None, None, False
+    if check_admin_target:
+        member = await _get_member(update.effective_chat, user_id)
+        if member and await _guard(
+            update,
+            s,
+            member.status in (ChatMember.ADMINISTRATOR, ChatMember.OWNER),
+            f"moderation.{action}_admin",
+        ):
+            return None, None, False
 
     return user_id, display_name, True
 
@@ -177,7 +178,6 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             s("moderation.ban_error"), parse_mode=constants.ParseMode.MARKDOWN_V2
         )
-
 
 
 def __init_module__(application):
