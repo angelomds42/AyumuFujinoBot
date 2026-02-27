@@ -71,3 +71,23 @@ settings:
   help: |
     Settings\:
     /setlang \<lang\> \- Set the group language
+
+notes:
+  save_usage: 'Usage\: /save \<name\> \<content\>'
+  save_success: 'Note `{name}` saved\.'
+  delnote_usage: 'Usage\: /delnote \<name\>'
+  delnote_success: 'Note `{name}` deleted\.'
+  delnote_not_found: 'Note `{name}` not found\.'
+  get_usage: 'Usage\: /get \<number\>'
+  not_found_index: 'No note at position `{index}`\.'
+  empty: 'No notes saved in this chat\.'
+  list_header: 'Notes in this chat\:'
+  list_footer: 'Get a note with `#name` or `/get \<number\>`'
+  not_found: 'Note `{name}` not found\.'
+  save_no_content: 'The replied message has no text content\.'
+  help: |
+    Notes\:
+    /save \<name\> \<content\> \- Save a note
+    /notes \- List all notes
+    /delnote \<name\> \- Delete a note
+    \#name \- Get a note

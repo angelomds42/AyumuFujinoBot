@@ -71,3 +71,23 @@ settings:
   help: |
     Configurações\:
     /setlang \<idioma\> \- Define o idioma do grupo
+
+notes:
+  save_usage: 'Uso\: /save \<nome\> \<conteúdo\>'
+  save_success: 'Nota `{name}` salva\.'
+  delnote_usage: 'Uso\: /delnote \<nome\>'
+  delnote_success: 'Nota `{name}` deletada\.'
+  delnote_not_found: 'Nota `{name}` não encontrada\.'
+  get_usage: 'Uso\: /get \<número\>'
+  not_found_index: 'Nenhuma nota na posição `{index}`\.'
+  empty: 'Nenhuma nota salva neste chat\.'
+  list_header: 'Notas neste chat\:'
+  list_footer: 'Recupere uma nota com `#nome` ou `/get \<número\>`'
+  not_found: 'Nota `{name}` não encontrada\.'
+  save_no_content: 'The replied message has no text content\.'
+  help: |
+    Notas\:
+    /save \<nome\> \<conteúdo\> \- Salva uma nota
+    /notes \- Lista todas as notas
+    /delnote \<nome\> \- Deleta uma nota
+    \#nome \- Recupera uma nota
