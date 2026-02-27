@@ -64,3 +64,10 @@ moderation:
     /unban \<user\> \[reason\] \- Unban a user
     /mute \<user\> \[duration\] \[reason\] \- Mute a user
     /unmute \<user\> \- Unmute a user
+
+settings:
+  setlang_usage: 'Usage\: /setlang \<lang\>\. Available\: {langs}'
+  setlang_success: 'Language set to `{lang}`\.'
+  help: |
+    Settings\:
+    /setlang \<lang\> \- Set the group language

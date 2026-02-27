@@ -18,6 +18,35 @@ def get_db() -> sqlite3.Connection:
                 username TEXT,
                 full_name TEXT
             )
-        """
+            """
+        )
+        _conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS chats (
+                chat_id  INTEGER PRIMARY KEY,
+                language TEXT NOT NULL DEFAULT 'en'
+            )
+            """
         )
     return _conn
+
+
+def get_chat_language(chat_id: int) -> str:
+    db = get_db()
+    row = db.execute(
+        "SELECT language FROM chats WHERE chat_id = ?", (chat_id,)
+    ).fetchone()
+    return row[0] if row else "en"
+
+
+def set_chat_language(chat_id: int, language: str) -> None:
+    db = get_db()
+    db.execute(
+        """
+        INSERT INTO chats (chat_id, language)
+        VALUES (?, ?)
+        ON CONFLICT(chat_id) DO UPDATE SET language = excluded.language
+        """,
+        (chat_id, language),
+    )
+    db.commit()

@@ -2,6 +2,7 @@ import os
 import yaml
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -58,12 +59,15 @@ class LanguageManager:
 
 
 def get_msg_string(update, key, **kwargs):
-    user_lang = (
-        update.effective_user.language_code
-        if update and update.effective_user
-        else "en"
-    )
-    return lang_manager.get_string(key, user_lang, **kwargs)
+    from bot.utils.db import get_chat_language
+
+    if update and update.effective_chat and update.effective_chat.type != "private":
+        lang = get_chat_language(update.effective_chat.id)
+    elif update and update.effective_user:
+        lang = update.effective_user.language_code or "en"
+    else:
+        lang = "en"
+    return lang_manager.get_string(key, lang, **kwargs)
 
 
 lang_manager = LanguageManager()

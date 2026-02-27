@@ -64,3 +64,10 @@ moderation:
     /unban \<usuário\> \[motivo\] \- Desbane um usuário
     /mute \<usuário\> \[duração\] \[motivo\] \- Silencia um usuário
     /unmute \<usuário\> \- Remove o silêncio de um usuário
+
+settings:
+  setlang_usage: 'Uso\: /setlang \<idioma\>\. Disponíveis\: {langs}'
+  setlang_success: 'Idioma definido para `{lang}`\.'
+  help: |
+    Configurações\:
+    /setlang \<idioma\> \- Define o idioma do grupo
