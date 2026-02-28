@@ -21,6 +21,27 @@ def _parse_duration(arg: str) -> timedelta | None:
         return None
 
 
+def _parse_ban_args(context, arg_offset: int, has_duration: bool):
+    if not has_duration or not context.args or len(context.args) <= arg_offset:
+        return None, None, arg_offset
+
+    delta = _parse_duration(context.args[arg_offset])
+    if not delta:
+        return None, None, arg_offset
+
+    until_date = datetime.now(tz=timezone.utc) + delta
+    return until_date, context.args[arg_offset], arg_offset + 1
+
+
+async def _execute_ban(update, user_id, until_date, kick, unban, delete_message):
+    if not unban:
+        await update.effective_chat.ban_member(user_id, until_date=until_date)
+    if kick or unban:
+        await update.effective_chat.unban_member(user_id)
+    if delete_message and update.message.reply_to_message:
+        await update.message.reply_to_message.delete()
+
+
 async def _resolve_target(update: Update, context):
     message = update.message
 
@@ -127,24 +148,20 @@ async def _ban_common(
 ):
     s, e = get_string_helper(update)
 
-    if force_reply:
-        if not update.message.reply_to_message:
-            await update.message.reply_text(
-                s(f"moderation.reply_required"),
-                parse_mode=constants.ParseMode.MARKDOWN_V2,
-            )
-            return
+    if force_reply and not update.message.reply_to_message:
+        await update.message.reply_text(
+            s("moderation.reply_required"), parse_mode=constants.ParseMode.MARKDOWN_V2
+        )
+        return
 
-    check_admin = not unban
     user_id, display_name, ok = await _check_common(
-        update, context, s, action, check_admin_target=check_admin
+        update, context, s, action, check_admin_target=not unban
     )
-
     if not ok:
         return
 
-    member = await _get_member(update.effective_chat, user_id)
     if unban:
+        member = await _get_member(update.effective_chat, user_id)
         if await _guard(
             update,
             s,
@@ -154,25 +171,13 @@ async def _ban_common(
             return
 
     arg_offset = 0 if update.message.reply_to_message else 1
-    until_date = None
-    duration_str = None
-
-    if has_duration and context.args and len(context.args) > arg_offset:
-        delta = _parse_duration(context.args[arg_offset])
-        if delta:
-            until_date = datetime.now(tz=timezone.utc) + delta
-            duration_str = context.args[arg_offset]
-            arg_offset += 1
-
+    until_date, duration_str, arg_offset = _parse_ban_args(
+        context, arg_offset, has_duration
+    )
     reason = " ".join(context.args[arg_offset:]) if context.args else None
 
     try:
-        if not unban:
-            await update.effective_chat.ban_member(user_id, until_date=until_date)
-        if kick or unban:
-            await update.effective_chat.unban_member(user_id)
-        if delete_message and update.message.reply_to_message:
-            await update.message.reply_to_message.delete()
+        await _execute_ban(update, user_id, until_date, kick, unban, delete_message)
 
         text = s(f"moderation.{action}_success", username=e(display_name))
         if duration_str:
@@ -189,21 +194,15 @@ async def _ban_common(
         )
 
 
-async def _mute_common(
-    update,
-    context,
-    action,
-    restrict=True,
-):
+async def _mute_common(update, context, action, restrict=True):
     s, e = get_string_helper(update)
 
     user_id, display_name, ok = await _check_common(update, context, s, action)
     if not ok:
         return
 
-    member = await _get_member(update.effective_chat, user_id)
-
     if not restrict:
+        member = await _get_member(update.effective_chat, user_id)
         if await _guard(
             update,
             s,
@@ -213,16 +212,9 @@ async def _mute_common(
             return
 
     arg_offset = 0 if update.message.reply_to_message else 1
-    until_date = None
-    duration_str = None
-
-    if restrict and context.args and len(context.args) > arg_offset:
-        delta = _parse_duration(context.args[arg_offset])
-        if delta:
-            until_date = datetime.now(tz=timezone.utc) + delta
-            duration_str = context.args[arg_offset]
-            arg_offset += 1
-
+    until_date, duration_str, arg_offset = _parse_ban_args(
+        context, arg_offset, restrict
+    )
     reason = " ".join(context.args[arg_offset:]) if context.args else None
 
     try:
@@ -254,7 +246,7 @@ async def _mute_common(
 
 
 async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await _ban_common(update, context, "kick", kick=True)
+    await _ban_common(update, context, "kick", kick=True, has_duration=False)
 
 
 async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
