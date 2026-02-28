@@ -1,6 +1,6 @@
 # English strings
 common:
-  start: 'Hey\! I am a modular Telegram bot\.'
+  start: 'Hey\! I am [Ayumu Fujino](https://raw.githubusercontent.com/angelomds42/AyumuFujinoBot/refs/heads/main/bot/assets/banner.png), a modular Telegram bot\.'
   help: 'Select a module below to see its commands\:'
   back: "« Back"
   btn_help: "Help"
