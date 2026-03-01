@@ -9,16 +9,14 @@ def register_module_help(module_name: str, help_key: str):
     HELP_MODULES[module_name] = help_key
 
 
-def get_help_keyboard(
-    back_callback: str = "start_main",
-) -> List[List[InlineKeyboardButton]]:
+def get_help_keyboard(back_text: str = "« Back") -> List[List[InlineKeyboardButton]]:
     """Generates a keyboard with all registered modules in rows of 2."""
     buttons = [
         InlineKeyboardButton(name, callback_data=f"help_mod_{name}")
         for name in sorted(HELP_MODULES.keys())
     ]
     keyboard = [buttons[i : i + 2] for i in range(0, len(buttons), 2)]
-    keyboard.append([InlineKeyboardButton("« Back", callback_data=back_callback)])
+    keyboard.append([InlineKeyboardButton(back_text, callback_data="start_main")])
     return keyboard
 
 
@@ -36,3 +34,7 @@ def get_string_helper(update):
         return helpers.escape_markdown(str(value), version=2)
 
     return s, e
+
+
+def e_list(items: list) -> str:
+    return ", ".join(f"`{helpers.escape_markdown(i, version=2)}`" for i in items)

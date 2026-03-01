@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
-from telegram import ChatPermissions, Update, ChatMember, MessageEntity, constants
+from telegram import ChatPermissions, Update, ChatMember, MessageEntity
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.error import TelegramError
 from bot.utils.admin import is_user_admin, bot_has_permission
 from bot.utils.help import get_string_helper, register_module_help
+from bot.utils.message import reply
 from bot.modules.users import get_user_id
 
 
@@ -22,6 +23,7 @@ def _parse_duration(arg: str) -> timedelta | None:
 
 
 def _parse_ban_args(context, arg_offset: int, has_duration: bool):
+    """Returns (until_date, duration_str, new_arg_offset)."""
     if not has_duration or not context.args or len(context.args) <= arg_offset:
         return None, None, arg_offset
 
@@ -29,11 +31,15 @@ def _parse_ban_args(context, arg_offset: int, has_duration: bool):
     if not delta:
         return None, None, arg_offset
 
-    until_date = datetime.now(tz=timezone.utc) + delta
-    return until_date, context.args[arg_offset], arg_offset + 1
+    return (
+        datetime.now(tz=timezone.utc) + delta,
+        context.args[arg_offset],
+        arg_offset + 1,
+    )
 
 
 async def _execute_ban(update, user_id, until_date, kick, unban, delete_message):
+    """Performs the actual ban/kick/unban and optional message deletion."""
     if not unban:
         await update.effective_chat.ban_member(user_id, until_date=until_date)
     if kick or unban:
@@ -93,9 +99,7 @@ async def _get_member(chat, user_id):
 
 async def _guard(update, s, condition, key) -> bool:
     if condition:
-        await update.message.reply_text(
-            s(key), parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
+        await reply(update, s(key))
         return True
     return False
 
@@ -149,10 +153,7 @@ async def _ban_common(
     s, e = get_string_helper(update)
 
     if force_reply and not update.message.reply_to_message:
-        await update.message.reply_text(
-            s("moderation.reply_required"), parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
-        return
+        return await reply(update, s("moderation.reply_required"))
 
     user_id, display_name, ok = await _check_common(
         update, context, s, action, check_admin_target=not unban
@@ -185,13 +186,9 @@ async def _ban_common(
         if reason:
             text += f"\n{s('moderation.restriction_reason', reason=e(reason))}"
 
-        await update.message.reply_text(
-            text, parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
+        await reply(update, text)
     except TelegramError:
-        await update.message.reply_text(
-            s(f"moderation.{action}_error"), parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
+        await reply(update, s(f"moderation.{action}_error"))
 
 
 async def _mute_common(update, context, action, restrict=True):
@@ -219,15 +216,15 @@ async def _mute_common(update, context, action, restrict=True):
 
     try:
         allow = not restrict
-        permissions = ChatPermissions(
-            can_send_messages=allow,
-            can_send_polls=allow,
-            can_send_other_messages=allow,
-            can_add_web_page_previews=allow,
-        )
-
         await update.effective_chat.restrict_member(
-            user_id, permissions, until_date=until_date
+            user_id,
+            ChatPermissions(
+                can_send_messages=allow,
+                can_send_polls=allow,
+                can_send_other_messages=allow,
+                can_add_web_page_previews=allow,
+            ),
+            until_date=until_date,
         )
 
         text = s(f"moderation.{action}_success", username=e(display_name))
@@ -236,13 +233,9 @@ async def _mute_common(update, context, action, restrict=True):
         if reason:
             text += f"\n{s('moderation.restriction_reason', reason=e(reason))}"
 
-        await update.message.reply_text(
-            text, parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
+        await reply(update, text)
     except TelegramError:
-        await update.message.reply_text(
-            s(f"moderation.{action}_error"), parse_mode=constants.ParseMode.MARKDOWN_V2
-        )
+        await reply(update, s(f"moderation.{action}_error"))
 
 
 async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
