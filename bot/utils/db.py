@@ -33,8 +33,10 @@ def get_db() -> sqlite3.Connection:
             CREATE TABLE IF NOT EXISTS notes (
                 chat_id    INTEGER NOT NULL,
                 name       TEXT NOT NULL,
-                content    TEXT NOT NULL,
+                content    TEXT,
                 parse_mode TEXT,
+                file_id    TEXT,
+                file_type  TEXT,
                 PRIMARY KEY (chat_id, name)
             )
         """
@@ -62,6 +64,8 @@ def get_db() -> sqlite3.Connection:
 
         for migration in [
             "ALTER TABLE notes ADD COLUMN parse_mode TEXT",
+            "ALTER TABLE notes ADD COLUMN file_id TEXT",
+            "ALTER TABLE notes ADD COLUMN file_type TEXT",
         ]:
             try:
                 _conn.execute(migration)
@@ -93,23 +97,23 @@ def set_chat_language(chat_id: int, language: str) -> None:
     db.commit()
 
 
-def get_note(chat_id: int, name: str) -> tuple[str, str | None] | None:
+def get_note(chat_id: int, name: str) -> tuple | None:
     row = (
         get_db()
         .execute(
-            "SELECT content, parse_mode FROM notes WHERE chat_id = ? AND LOWER(name) = ?",
+            "SELECT content, parse_mode, file_id, file_type FROM notes WHERE chat_id = ? AND LOWER(name) = ?",
             (chat_id, name.lower()),
         )
         .fetchone()
     )
-    return (row[0], row[1]) if row else None
+    return tuple(row) if row else None
 
 
-def get_note_by_index(chat_id: int, index: int) -> tuple[str, str, str | None] | None:
+def get_note_by_index(chat_id: int, index: int) -> tuple | None:
     rows = (
         get_db()
         .execute(
-            "SELECT name, content, parse_mode FROM notes WHERE chat_id = ? ORDER BY name",
+            "SELECT name, content, parse_mode, file_id, file_type FROM notes WHERE chat_id = ? ORDER BY name",
             (chat_id,),
         )
         .fetchall()
@@ -118,17 +122,25 @@ def get_note_by_index(chat_id: int, index: int) -> tuple[str, str, str | None] |
 
 
 def save_note(
-    chat_id: int, name: str, content: str, parse_mode: str | None = None
+    chat_id: int,
+    name: str,
+    content: str | None = None,
+    parse_mode: str | None = None,
+    file_id: str | None = None,
+    file_type: str | None = None,
 ) -> None:
     db = get_db()
     db.execute(
         """
-        INSERT INTO notes (chat_id, name, content, parse_mode) VALUES (?, ?, ?, ?)
+        INSERT INTO notes (chat_id, name, content, parse_mode, file_id, file_type)
+        VALUES (?, ?, ?, ?, ?, ?)
         ON CONFLICT(chat_id, name) DO UPDATE SET
             content    = excluded.content,
-            parse_mode = excluded.parse_mode
+            parse_mode = excluded.parse_mode,
+            file_id    = excluded.file_id,
+            file_type  = excluded.file_type
         """,
-        (chat_id, name.lower(), content, parse_mode),
+        (chat_id, name.lower(), content, parse_mode, file_id, file_type),
     )
     db.commit()
 

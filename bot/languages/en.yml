@@ -99,7 +99,7 @@ settings:
     /setlang `<lang>` \- Set the group language
 
 notes:
-  save_usage: 'Usage\: /save `<name>` `<content>` or reply to a message'
+  save_usage: 'Usage\: /save `<name>` `<content>` or reply to a message \(text or media\)'
   save_success: '`#{name}` saved\.'
   save_no_content: 'That message has no text to save\.'
   delnote_usage: 'Usage\: /delnote `<name>`'
@@ -113,7 +113,7 @@ notes:
   help: |
     *Notes*\:
     /save `<name>` `<content>` \- Save a note
-    /save `<name>` `(reply)` \- Save a formatted message as a note
+    /save `<name>` `(reply)` \- Save a message or media as a note
     /notes \- List all notes
     /get `<number>` \- Get a note by number
     /delnote `<name>` \- Delete a note
