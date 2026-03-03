@@ -1,7 +1,6 @@
 from telegram import Update, MessageEntity
 from telegram.error import TelegramError
-from bot.modules.users import get_user_id
-
+from bot.utils.db import get_db
 
 async def resolve_target(update: Update, context):
     message = update.message
@@ -43,3 +42,12 @@ async def resolve_target(update: Update, context):
                 return None, None
 
     return None, None
+
+
+def get_user_id(username: str) -> int | None:
+    username = username.lstrip("@").lower()
+    db = get_db()
+    row = db.execute(
+        "SELECT user_id FROM users WHERE LOWER(username) = ?", (username,)
+    ).fetchone()
+    return row[0] if row else None

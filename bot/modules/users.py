@@ -1,5 +1,6 @@
 from telegram import Update, ChatMemberUpdated
 from telegram.ext import ContextTypes, MessageHandler, ChatMemberHandler, filters
+from bot.utils.user import get_user_id
 from bot.utils.db import get_db
 
 
@@ -32,15 +33,6 @@ async def _save_chat_member(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not member_update:
         return
     _save_user_to_db(member_update.new_chat_member.user)
-
-
-def get_user_id(username: str) -> int | None:
-    username = username.lstrip("@").lower()
-    db = get_db()
-    row = db.execute(
-        "SELECT user_id FROM users WHERE LOWER(username) = ?", (username,)
-    ).fetchone()
-    return row[0] if row else None
 
 
 def __init_module__(application):
