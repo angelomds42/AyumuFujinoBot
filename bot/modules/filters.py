@@ -31,7 +31,7 @@ async def filter_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     if not context.args:
         return await reply(update, s("filters.save_usage"))
@@ -56,7 +56,7 @@ async def filter_remove(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     if not context.args:
         return await reply(update, s("filters.remove_usage"))
@@ -72,7 +72,7 @@ async def filter_remove_all(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, _ = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     delete_all_filters(update.effective_chat.id)
     await reply(update, s("filters.remove_all_success"))

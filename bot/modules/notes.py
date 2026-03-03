@@ -65,7 +65,7 @@ async def save(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     if not context.args:
         return await reply(update, s("notes.save_usage"))
@@ -101,7 +101,7 @@ async def delnote(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     if not context.args:
         return await reply(update, s("notes.delnote_usage"))

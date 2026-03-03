@@ -99,7 +99,7 @@ async def warnlimit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     if not context.args or not context.args[0].isdigit() or int(context.args[0]) < 1:
         return await reply(update, s("moderation.warn.limit_usage"))

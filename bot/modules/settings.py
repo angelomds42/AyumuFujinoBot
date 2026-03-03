@@ -11,7 +11,7 @@ async def setlang(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, _ = get_string_helper(update)
 
     if not await is_user_admin(update):
-        return await reply(update, s("moderation.common.user_not_admin"))
+        return await reply(update, s("common.user_not_admin"))
 
     available = list(lang_manager.strings.keys())
 

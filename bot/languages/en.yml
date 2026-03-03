@@ -9,6 +9,7 @@ common:
   help_pm: Click the button below to see my commands\.
   back: "« Back"
   btn_help: "Help »"
+  user_not_admin: 'Admins only\.'
 
 basics:
   help: |
@@ -36,7 +37,6 @@ errors:
 
 moderation:
   common:
-    user_not_admin: 'Admins only\.'
     bot_no_permission: 'I need the restrict members permission for that\.'
     no_target: 'Reply to a message, mention a user, or provide a user ID\.'
     reply_required: 'Reply to a message to use this command\.'

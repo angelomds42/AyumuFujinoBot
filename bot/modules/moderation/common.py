@@ -92,7 +92,7 @@ async def guard(update, s, condition, key) -> bool:
 
 async def check_common(update, context, s, action, check_admin_target=True):
     if await guard(
-        update, s, not await is_user_admin(update), "moderation.common.user_not_admin"
+        update, s, not await is_user_admin(update), "common.user_not_admin"
     ):
         return None, None, False
 
