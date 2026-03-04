@@ -24,20 +24,6 @@ Run:
 python -m bot
 ```
 
-## Project tree
-
-```
-bot/
-├── languages/       # Strings
-├── modules/         # Commands
-└── utils/
-    ├── admin.py     # Permission checks
-    ├── db.py        # SQLite helpers
-    ├── help.py      # Help menu and string utilities
-    ├── language.py  # Language engine
-    └── message.py   # Shared reply helpers
-```
-
 ## Adding a Module
 
 Create a file in `bot/modules/`. The bot auto-loads any module that exposes `__init_module__`:
