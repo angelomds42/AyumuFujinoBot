@@ -2,6 +2,9 @@ from telegram import Update, MessageEntity
 from telegram.error import TelegramError
 from bot.utils.db import get_db
 
+import re
+
+
 async def resolve_target(update: Update, context):
     message = update.message
 
@@ -12,7 +15,7 @@ async def resolve_target(update: Update, context):
     if not context.args:
         return None, None
 
-    target = context.args[0].strip()
+    target = re.sub(r"[^\w@\-]", "", context.args[0])
 
     entities = list(message.parse_entities([MessageEntity.TEXT_MENTION]))
     if entities:
@@ -26,8 +29,13 @@ async def resolve_target(update: Update, context):
                 chat = await context.bot.get_chat(uid)
                 return chat.id, chat.username or chat.first_name
             except TelegramError:
-                return uid, target.lstrip("@")
-        return None, None
+                pass
+
+        try:
+            chat = await context.bot.get_chat(target)
+            return chat.id, chat.username or chat.first_name
+        except TelegramError:
+            return None, None
 
     if target.lstrip("-").isdigit():
         uid = int(target)
