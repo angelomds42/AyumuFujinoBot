@@ -27,6 +27,21 @@ def _parse_keyword(args: list[str]) -> tuple[str, list[str]]:
     return args[0].lower(), args[1:]
 
 
+def _fill_reply_vars(text: str, replied_user) -> str:
+    if not replied_user:
+        return (
+            text.replace("{mention}", "").replace("{username}", "").replace("{id}", "")
+        )
+
+    mention = (
+        f"@{replied_user.username}" if replied_user.username else replied_user.full_name
+    )
+    text = text.replace("{mention}", mention)
+    text = text.replace("{username}", replied_user.username or replied_user.full_name)
+    text = text.replace("{id}", str(replied_user.id))
+    return text
+
+
 async def filter_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     s, e = get_string_helper(update)
 
@@ -96,8 +111,15 @@ async def handle_filters(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
     chat_filters = get_filters(update.effective_chat.id)
 
+    replied_user = (
+        update.message.reply_to_message.from_user
+        if update.message.reply_to_message
+        else None
+    )
+
     for keyword, response in chat_filters:
         if keyword in text:
+            response = _fill_reply_vars(response, replied_user)
             await update.message.reply_text(response)
             return
 
@@ -107,7 +129,5 @@ def __init_module__(application):
     application.add_handler(CommandHandler("unfilter", filter_remove))
     application.add_handler(CommandHandler("stopall", filter_remove_all))
     application.add_handler(CommandHandler("filters", filter_list))
-    application.add_handler(
-        MessageHandler(filters.TEXT, handle_filters), group=2
-    )
+    application.add_handler(MessageHandler(filters.TEXT, handle_filters), group=2)
     register_module_help("Filters", "filters.help")

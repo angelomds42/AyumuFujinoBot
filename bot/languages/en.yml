@@ -164,7 +164,7 @@ misc:
     `[usr]` — @mention, reply or user ID
 
 filters:
-  save_usage: 'usage\: /filter `<key>` `<msg>` or reply to a message\. for multi\-word keys use quotes\: /filter `"hey there"` `msg`'
+  save_usage: 'usage\: /filter `<key>` `<msg>` or reply to a message\.'
   save_success: 'filter `{keyword}` saved\.'
   remove_usage: 'usage\: /unfilter `<key>`'
   remove_success: 'filter `{keyword}` removed\.'
@@ -174,7 +174,7 @@ filters:
   empty: 'no filters set here yet\.'
   list_header: 'active filters\:'
   help: |
-    *filters*\:
+    *filters*
     i reply so you don't have to\.
 
     /filter `<key>` `<msg>` \- add a filter
@@ -184,3 +184,5 @@ filters:
     /filters \- list active filters
 
     `<key>` — single word or "phrase in quotes"
+    `{mention}`, `{username}`, `{id}` — reference the replied user
+    multi\-word keys\: /filter `"hey there"` `response`

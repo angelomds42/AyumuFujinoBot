@@ -164,7 +164,7 @@ misc:
     `[usr]` — @menção, reply ou user ID
 
 filters:
-  save_usage: 'uso\: /filter `<key>` `<msg>` ou responda a uma mensagem\. para keys com espaços use aspas\: /filter `"bom dia"` `msg`'
+  save_usage: 'uso\: /filter `<key>` `<msg>` ou responda a uma mensagem\.'
   save_success: 'filtro `{keyword}` salvo\.'
   remove_usage: 'uso\: /unfilter `<key>`'
   remove_success: 'filtro `{keyword}` removido\.'
@@ -174,7 +174,7 @@ filters:
   empty: 'nenhum filtro definido aqui ainda\.'
   list_header: 'filtros ativos\:'
   help: |
-    *filtros*\:
+    *filtros*
     eu respondo pra você não precisar\.
 
     /filter `<key>` `<msg>` \- adiciona um filtro
@@ -184,3 +184,5 @@ filters:
     /filters \- lista os filtros ativos
 
     `<key>` — palavra ou "frase entre aspas"
+    `{mention}`, `{username}`, `{id}` — referenciam quem foi respondido
+    keys com espaços\: /filter `"bom dia"` `resposta`
